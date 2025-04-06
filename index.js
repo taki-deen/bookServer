@@ -1,113 +1,94 @@
 const express = require("express");
 require("dotenv").config();
+const mongoose = require("mongoose");
+const Book = require("./models/Book");
+
+mongoose
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("✅ Connected to MongoDB"))
+  .catch((err) => console.error("❌ MongoDB connection error:", err));
 
 const app = express();
 const port = process.env.PORT;
 
 app.use(express.json());
 
-let bookList = [
-  { id: 1, name: "Item One", isbn: "111", aisle: "222", author: "Author One" },
-  { id: 2, name: "why your are .. ", isbn: "111", aisle: "222", author: "ali" },
-  { id: 2, name: "how to ..", isbn: "113", aisle: "224", author: "ali" },
-  {
-    id: 3,
-    name: "book three",
-    isbn: "115",
-    aisle: "226",
-    author: "Author Three",
-  },
-  {
-    id: 4,
-    name: "book four",
-    isbn: "117",
-    aisle: "228",
-    author: "Author Four",
-  },
-];
+app.set("view engine", "ejs");
+app.set("views", "./views"); // المجلد اللي رح نضع فيه ملفات الواجهات
 
+// Show form to add a new book
+app.get("/ui/new", (req, res) => {
+  res.render("newBook");
+});
+
+// List all books in UI
+app.get("/ui/books", async (req, res) => {
+  const books = await Book.find({});
+  res.render("bookList", { books });
+});
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static("public")); // to serve static files like CSS, JS, images
+app.use("/assets", express.static("assets")); // to serve static files like CSS, JS, images
 app.get("/", (req, res) => {
   res.send("Hello taqi!");
 });
-app.get("/books", (req, res) => {
-  const author = req.query.author;
-  console.log(author);
-  if (author) {
-    const filteredBooks = bookList.filter((book) => book.author === author);
-    return res.json(filteredBooks);
-  }
 
-  res.json(bookList);
+app.get("/books", async (req, res) => {
+  try {
+    const books = await Book.find({});
+    res.json(books);
+  } catch (err) {
+    res.status(500).json({ message: "Error getting books", error: err });
+  }
 });
 
-app.get("/book/:id", (req, res) => {
-  // res.json(bookList);
-  const bookId = parseInt(req.params.id, 10);
-  const book = bookList.find((b) => b.id === bookId);
-  if (!book) {
-    return res.status(404).json({ message: "Book not found" });
+app.post("/book", async (req, res) => {
+  if (!req.body.name || !req.body.isbn || !req.body.aisle) {
+    return res.status(400).json({ message: "Missing required fields" });
   }
-  res.json(book);
-});
-
-app.post("/book", (req, res) => {
-  const newBook = {
-    id: bookList.length + 1,
-    name: req.body.name,
-    isbn: req.body.isbn,
-    aisle: req.body.aisle,
-    author: req.body.author,
-  };
-
-  bookList.push(newBook);
-  res.status(201).json(newBook);
+  try {
+    const newBook = new Book(req.body);
+    await newBook.save();
+    // res.status(201).json(newBook);
+    res.redirect("/ui/books"); // Redirect to the list of books after saving
+  } catch (err) {
+    res.status(500).json({ message: "Error saving book", error: err });
+  }
 });
 
 // PUT - Update an book
-app.put("/book/:id", (req, res) => {
-  const bookId = parseInt(req.params.id);
-  const bookIndex = bookList.findIndex((i) => i.id === bookId);
+app.put("/book/:bookId", async (req, res) => {
+  const bookId = req.params.bookId; // MongoDB uses ObjectId, no need to parse it as integer
 
-  if (bookIndex === -1) {
-    return res.status(404).json({ message: "book not found" });
+  if (!req.body.name || !req.body.isbn || !req.body.aisle || !req.body.author) {
+    return res.status(400).json({ message: "Missing required fields" });
   }
 
-  const updatedbook = {
-    ...bookList[bookIndex],
-    ...req.body,
-  };
+  // Update the book by its ObjectId
+  const updatedBook = await Book.findByIdAndUpdate(bookId, req.body, {
+    new: true, // This option returns the updated document
+  });
 
-  bookList[bookIndex] = updatedbook;
-  res.json(updatedbook);
-});
-
-app.patch("/book/:id", (req, res) => {
-  const bookId = parseInt(req.params.id);
-  const bookIndex = bookList.findIndex((i) => i.id === bookId);
-
-  if (bookIndex === -1) {
-    return res.status(404).json({ message: "book not found" });
-  }
-
-  const updatedbook = {
-    ...bookList[bookIndex],
-    ...req.body,
-  };
-
-  bookList[itemIndex] = updatedItem;
-  res.json(updatedItem);
-});
-
-// DELETE - Delete an book
-app.delete("/book/:id", (req, res) => {
-  const bookId = parseInt(req.params.id, 10);
-  const bookIndex = bookList.findIndex((b) => b.id === bookId);
-  console.log(bookIndex);
-  if (bookIndex === -1) {
+  if (!updatedBook) {
     return res.status(404).json({ message: "Book not found" });
   }
 
-  bookList = bookList.filter((b) => b.id != bookId);
+  res.status(200).json(updatedBook);
+});
+
+app.delete("/book/:bookId", async (req, res) => {
+  const bookId = req.params.bookId; // MongoDB uses ObjectId, no need to parse it as integer
+
+  const deletedBook = await Book.findByIdAndDelete(bookId);
+
+  if (!deletedBook) {
+    return res.status(404).json({ message: "Book not found" });
+  }
+
   res.status(204).send();
 });
 
