@@ -1,12 +1,11 @@
 const express = require("express");
 require("dotenv").config();
-const app = express();
 
+const app = express();
 const port = process.env.PORT;
 
 app.use(express.json());
 
-// Simulated in-memory data
 let bookList = [
   { id: 1, name: "Item One", isbn: "111", aisle: "222", author: "Author One" },
   { id: 2, name: "why your are .. ", isbn: "111", aisle: "222", author: "ali" },
@@ -66,32 +65,32 @@ app.post("/book", (req, res) => {
 
 // PUT - Update an book
 app.put("/book/:id", (req, res) => {
-  const itemId = parseInt(req.params.id);
-  const itemIndex = bookList.findIndex((i) => i.id === itemId);
+  const bookId = parseInt(req.params.id);
+  const bookIndex = bookList.findIndex((i) => i.id === bookId);
 
-  if (itemIndex === -1) {
-    return res.status(404).json({ message: "Item not found" });
+  if (bookIndex === -1) {
+    return res.status(404).json({ message: "book not found" });
   }
 
-  const updatedItem = {
-    ...bookList[itemIndex],
+  const updatedbook = {
+    ...bookList[bookIndex],
     ...req.body,
   };
 
-  bookList[itemIndex] = updatedItem;
-  res.json(updatedItem);
+  bookList[bookIndex] = updatedbook;
+  res.json(updatedbook);
 });
 
 app.patch("/book/:id", (req, res) => {
-  const itemId = parseInt(req.params.id);
-  const itemIndex = bookList.findIndex((i) => i.id === itemId);
+  const bookId = parseInt(req.params.id);
+  const bookIndex = bookList.findIndex((i) => i.id === bookId);
 
-  if (itemIndex === -1) {
-    return res.status(404).json({ message: "Item not found" });
+  if (bookIndex === -1) {
+    return res.status(404).json({ message: "book not found" });
   }
 
-  const updatedItem = {
-    ...bookList[itemIndex],
+  const updatedbook = {
+    ...bookList[bookIndex],
     ...req.body,
   };
 
