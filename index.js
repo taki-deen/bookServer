@@ -1,117 +1,66 @@
 const express = require("express");
+const { PrismaClient } = require("@prisma/client");
 require("dotenv").config();
 
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
+const prisma = new PrismaClient();
 
 app.use(express.json());
 
-let bookList = [
-  { id: 1, name: "Item One", isbn: "111", aisle: "222", author: "Author One" },
-  { id: 2, name: "why your are .. ", isbn: "111", aisle: "222", author: "ali" },
-  { id: 2, name: "how to ..", isbn: "113", aisle: "224", author: "ali" },
-  {
-    id: 3,
-    name: "book three",
-    isbn: "115",
-    aisle: "226",
-    author: "Author Three",
-  },
-  {
-    id: 4,
-    name: "book four",
-    isbn: "117",
-    aisle: "228",
-    author: "Author Four",
-  },
-];
-
-app.get("/", (req, res) => {
-  res.send("Hello taqi!");
-});
-app.get("/books", (req, res) => {
-  const author = req.query.author;
-  console.log(author);
-  if (author) {
-    const filteredBooks = bookList.filter((book) => book.author === author);
-    return res.json(filteredBooks);
-  }
-
-  res.json(bookList);
+// Get all books or filter by author
+app.get("/books", async (req, res) => {
+  const { author } = req.query;
+  const books = await prisma.book.findMany({
+    where: author ? { author } : undefined,
+  });
+  res.json(books);
 });
 
-app.get("/book/:id", (req, res) => {
-  // res.json(bookList);
-  const bookId = parseInt(req.params.id, 10);
-  const book = bookList.find((b) => b.id === bookId);
-  if (!book) {
-    return res.status(404).json({ message: "Book not found" });
-  }
+// Get book by ID
+app.get("/book/:id", async (req, res) => {
+  const book = await prisma.book.findUnique({
+    where: { id: parseInt(req.params.id) },
+  });
+  if (!book) return res.status(404).json({ message: "Book not found" });
   res.json(book);
 });
 
-app.post("/book", (req, res) => {
-  const newBook = {
-    id: bookList.length + 1,
-    name: req.body.name,
-    isbn: req.body.isbn,
-    aisle: req.body.aisle,
-    author: req.body.author,
-  };
-
-  bookList.push(newBook);
+// Add new book
+app.post("/book", async (req, res) => {
+  const { name, isbn, aisle, author } = req.body;
+  const newBook = await prisma.book.create({
+    data: { name, isbn, aisle, author },
+  });
   res.status(201).json(newBook);
 });
 
-// PUT - Update an book
-app.put("/book/:id", (req, res) => {
-  const bookId = parseInt(req.params.id);
-  const bookIndex = bookList.findIndex((i) => i.id === bookId);
-
-  if (bookIndex === -1) {
-    return res.status(404).json({ message: "book not found" });
+// Update book
+app.put("/book/:id", async (req, res) => {
+  const { name, isbn, aisle, author } = req.body;
+  try {
+    const updated = await prisma.book.update({
+      where: { id: parseInt(req.params.id) },
+      data: { name, isbn, aisle, author },
+    });
+    res.json(updated);
+  } catch {
+    res.status(404).json({ message: "Book not found" });
   }
-
-  const updatedbook = {
-    ...bookList[bookIndex],
-    ...req.body,
-  };
-
-  bookList[bookIndex] = updatedbook;
-  res.json(updatedbook);
 });
 
-app.patch("/book/:id", (req, res) => {
-  const bookId = parseInt(req.params.id);
-  const bookIndex = bookList.findIndex((i) => i.id === bookId);
-
-  if (bookIndex === -1) {
-    return res.status(404).json({ message: "book not found" });
+// Delete book
+app.delete("/book/:id", async (req, res) => {
+  try {
+    await prisma.book.delete({
+      where: { id: parseInt(req.params.id) },
+    });
+    res.status(204).send();
+  } catch {
+    res.status(404).json({ message: "Book not found" });
   }
-
-  const updatedbook = {
-    ...bookList[bookIndex],
-    ...req.body,
-  };
-
-  bookList[itemIndex] = updatedItem;
-  res.json(updatedItem);
 });
 
-// DELETE - Delete an book
-app.delete("/book/:id", (req, res) => {
-  const bookId = parseInt(req.params.id, 10);
-  const bookIndex = bookList.findIndex((b) => b.id === bookId);
-  console.log(bookIndex);
-  if (bookIndex === -1) {
-    return res.status(404).json({ message: "Book not found" });
-  }
-
-  bookList = bookList.filter((b) => b.id != bookId);
-  res.status(204).send();
-});
-
-// Start the server
 app.listen(port, () => {
-  console.log(`API is running on http://localhost:${port}`);
+  console.log(`✅ API is running on http://localhost:${port}`);
 });
