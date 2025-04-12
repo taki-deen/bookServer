@@ -1,4 +1,4 @@
-generator client {
+generator client { 
   provider = "prisma-client-js"
 }
 
@@ -7,10 +7,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Author {
+  id    Int     @id @default(autoincrement())
+  name  String
+  books Book[]  // One to Many relationship
+}
+
 model Book {
-  id     Int    @id @default(autoincrement())
-  name   String
-  isbn   String
-  aisle  String
-  author String
+  id       Int     @id @default(autoincrement())
+  name     String
+  isbn     String
+  aisle    String
+  authorId Int
+  author   Author  @relation(fields: [authorId], references: [id])
 }
