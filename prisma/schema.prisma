@@ -10,14 +10,21 @@ datasource db {
 model Author {
   id    Int     @id @default(autoincrement())
   name  String
-  books Book[]  // One to Many relationship
+  books Book[]  @relation("AuthorToBook") // Many to Many relationship
 }
 
 model Book {
-  id       Int     @id @default(autoincrement())
-  name     String
-  isbn     String
-  aisle    String
-  authorId Int
-  author   Author  @relation(fields: [authorId], references: [id])
+  id         Int        @id @default(autoincrement())
+  name       String
+  isbn       String
+  aisle      String
+  authors    Author[]   @relation("AuthorToBook") // Many to Many relationship
+  bookshops  Bookshop[] @relation("BookToBookshop") // Many to Many relationship with Bookshop
+}
+
+model Bookshop {
+  id      Int     @id @default(autoincrement())
+  name    String
+  address String
+  books   Book[]  @relation("BookToBookshop") // Many to Many relationship with Book
 }
