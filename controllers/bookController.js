@@ -23,6 +23,7 @@ exports.getBookById = async (req, res) => {
 exports.createBook = async (req, res) => {
   const { name, isbn, aisle, authorId } = req.body;
   try {
+    //TODO: check if authorId exists in the authors table
     const newBook = await prisma.book.create({
       data: { name, isbn, aisle, authorId },
     });
