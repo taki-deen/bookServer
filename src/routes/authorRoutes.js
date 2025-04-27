@@ -7,7 +7,7 @@ const authorController = require('../controllers/authorController');
  * /authors:
  *   get:
  *     summary: Get all authors
- *     tags: [Authors]
+ *     description: Retrieve a list of all authors with their books
  *     responses:
  *       200:
  *         description: List of authors
@@ -17,6 +17,12 @@ const authorController = require('../controllers/authorController');
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Author'
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  */
 router.get('/', authorController.getAllAuthors);
 
@@ -25,7 +31,7 @@ router.get('/', authorController.getAllAuthors);
  * /authors/{id}:
  *   get:
  *     summary: Get an author by ID
- *     tags: [Authors]
+ *     description: Retrieve a specific author by their ID with their books
  *     parameters:
  *       - in: path
  *         name: id
@@ -42,6 +48,16 @@ router.get('/', authorController.getAllAuthors);
  *               $ref: '#/components/schemas/Author'
  *       404:
  *         description: Author not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  */
 router.get('/:id', authorController.getAuthorById);
 
@@ -50,7 +66,7 @@ router.get('/:id', authorController.getAuthorById);
  * /authors:
  *   post:
  *     summary: Create a new author
- *     tags: [Authors]
+ *     description: Create a new author with the provided details
  *     requestBody:
  *       required: true
  *       content:
@@ -66,6 +82,16 @@ router.get('/:id', authorController.getAuthorById);
  *               $ref: '#/components/schemas/Author'
  *       400:
  *         description: Invalid input
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  */
 router.post('/', authorController.createAuthor);
 
@@ -74,7 +100,7 @@ router.post('/', authorController.createAuthor);
  * /authors/{id}:
  *   put:
  *     summary: Update an author
- *     tags: [Authors]
+ *     description: Update an existing author with the provided details
  *     parameters:
  *       - in: path
  *         name: id
@@ -97,6 +123,16 @@ router.post('/', authorController.createAuthor);
  *               $ref: '#/components/schemas/Author'
  *       404:
  *         description: Author not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  */
 router.put('/:id', authorController.updateAuthor);
 
@@ -105,7 +141,7 @@ router.put('/:id', authorController.updateAuthor);
  * /authors/{id}:
  *   delete:
  *     summary: Delete an author
- *     tags: [Authors]
+ *     description: Delete an author by their ID
  *     parameters:
  *       - in: path
  *         name: id
@@ -118,6 +154,16 @@ router.put('/:id', authorController.updateAuthor);
  *         description: Author deleted successfully
  *       404:
  *         description: Author not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  */
 router.delete('/:id', authorController.deleteAuthor);
 

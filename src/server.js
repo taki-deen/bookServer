@@ -1,6 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
 require("dotenv").config();
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./config/swagger');
 
 const app = express();
 
@@ -35,6 +37,9 @@ app.use("/assets", express.static("src/assets"));
 // View engine setup
 app.set("view engine", "ejs");
 app.set("views", "./src/views");
+
+// Swagger UI
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Routes
 app.use("/books", bookRoutes);
