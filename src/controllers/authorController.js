@@ -3,7 +3,7 @@ const { Author, Book } = require('../models');
 // Get all authors
 exports.getAllAuthors = async (req, res) => {
   try {
-    const authors = await Author.find().populate('books');
+    const authors = await Author.find()
     res.json(authors);
   } catch (error) {
     res.status(500).json({ message: "Failed to fetch authors", error: error.message });
