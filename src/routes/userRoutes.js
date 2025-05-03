@@ -1,22 +1,22 @@
 const express = require('express');
 const router = express.Router();
-const authorController = require('../controllers/authorController');
+const userController = require('../controllers/userController');
 
 /**
  * @swagger
- * /authors:
+ * /users:
  *   get:
- *     summary: Get all authors
- *     description: Retrieve a list of all authors with their books
+ *     summary: Get all users
+ *     description: Retrieve a list of all users
  *     responses:
  *       200:
- *         description: List of authors
+ *         description: List of users
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/Author'
+ *                 $ref: '#/components/schemas/User'
  *       500:
  *         description: Server error
  *         content:
@@ -24,30 +24,30 @@ const authorController = require('../controllers/authorController');
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.get('/', authorController.getAllAuthors);
+router.get('/', userController.getAllUsers);
 
 /**
  * @swagger
- * /authors/{id}:
+ * /users/{id}:
  *   get:
- *     summary: Get an author by ID
- *     description: Retrieve a specific author by their ID with their books
+ *     summary: Get a user by ID
+ *     description: Retrieve a specific user by their ID
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: string
- *         description: Author ID
+ *         description: User ID
  *     responses:
  *       200:
- *         description: Author details
+ *         description: User details
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Author'
+ *               $ref: '#/components/schemas/User'
  *       404:
- *         description: Author not found
+ *         description: User not found
  *         content:
  *           application/json:
  *             schema:
@@ -59,70 +59,29 @@ router.get('/', authorController.getAllAuthors);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.get('/:id', authorController.getAuthorById);
+router.get('/:id', userController.getUserById);
 
 /**
  * @swagger
- * /authors:
+ * /users:
  *   post:
- *     summary: Create a new author
- *     description: Create a new author with the provided name
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *             example:
- *               name: strin3g
- *             required:
- *               - name
- *             properties:
- *               name:
- *                 type: string
- *                 description: The name of the author
- *     responses:
- *       201:
- *         description: Author created successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Author'
- *       400:
- *         description: Failed to create author
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
- */
-router.post('/', authorController.createAuthor);
-
-/**
- * @swagger
- * /authors/{id}:
- *   put:
- *     summary: Update an author
- *     description: Update an existing author with the provided details
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: Author ID
+ *     summary: Create a new user
+ *     description: Create a new user with the provided details
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Author'
+ *             $ref: '#/components/schemas/User'
  *     responses:
- *       200:
- *         description: Author updated successfully
+ *       201:
+ *         description: User created successfully
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Author'
- *       404:
- *         description: Author not found
+ *               $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Invalid input
  *         content:
  *           application/json:
  *             schema:
@@ -134,26 +93,36 @@ router.post('/', authorController.createAuthor);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.put('/:id', authorController.updateAuthor);
+router.post('/', userController.createUser);
 
 /**
  * @swagger
- * /authors/{id}:
- *   delete:
- *     summary: Delete an author
- *     description: Delete an author by their ID
+ * /users/{id}:
+ *   put:
+ *     summary: Update a user
+ *     description: Update an existing user with the provided details
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: string
- *         description: Author ID
+ *         description: User ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/User'
  *     responses:
  *       200:
- *         description: Author deleted successfully
+ *         description: User updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
  *       404:
- *         description: Author not found
+ *         description: User not found
  *         content:
  *           application/json:
  *             schema:
@@ -165,6 +134,37 @@ router.put('/:id', authorController.updateAuthor);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.delete('/:id', authorController.deleteAuthor);
+router.put('/:id', userController.updateUser);
+
+/**
+ * @swagger
+ * /users/{id}:
+ *   delete:
+ *     summary: Delete a user
+ *     description: Delete a user by their ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID
+ *     responses:
+ *       200:
+ *         description: User deleted successfully
+ *       404:
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
+router.delete('/:id', userController.deleteUser);
 
 module.exports = router; 
