@@ -1,13 +1,13 @@
 const express = require("express");
 const mongoose = require("mongoose");
 require("dotenv").config();
-const swaggerUi = require('swagger-ui-express');
-const swaggerSpec = require('./config/swagger');
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./config/swagger");
 
 const app = express();
 
 // Import models
-const { Author, Book, Bookshop } = require('./models');
+const { Author, Book, Bookshop } = require("./models");
 
 // Import routes
 const bookRoutes = require("./routes/books");
@@ -15,14 +15,15 @@ const authorRoutes = require("./routes/authors");
 const bookshopRoutes = require("./routes/bookshops");
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI, {
-  serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 10s
-  socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
-  family: 4 // Use IPv4, skip trying IPv6
-})
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(err => {
-    console.error('Could not connect to MongoDB:', err);
+mongoose
+  .connect(process.env.MONGO_URI, {
+    serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 10s
+    socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
+    family: 4, // Use IPv4, skip trying IPv6
+  })
+  .then(() => console.log("Connected to MongoDB"))
+  .catch((err) => {
+    console.error("Could not connect to MongoDB:", err);
     process.exit(1); // Exit the process if MongoDB connection fails
   });
 
@@ -39,7 +40,7 @@ app.set("view engine", "ejs");
 app.set("views", "./src/views");
 
 // Swagger UI
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Routes
 app.use("/books", bookRoutes);
@@ -58,10 +59,10 @@ app.get("/ui/new", async (req, res) => {
     res.render("newBook", { authors, bookshops });
   } catch (error) {
     console.error("Error fetching data for new book form:", error);
-    res.status(500).render("newBook", { 
-      authors: [], 
+    res.status(500).render("newBook", {
+      authors: [],
       bookshops: [],
-      error: "Failed to load form data"
+      error: "Failed to load form data",
     });
   }
 });
@@ -76,18 +77,16 @@ app.get("/ui/new-bookshop", (req, res) => {
 
 app.get("/ui/books", async (req, res) => {
   try {
-    const books = await Book.find()
-      .populate('authors')
-      .populate('bookshops');
-    res.render("bookList", { 
+    const books = await Book.find().populate("authors").populate("bookshops");
+    res.render("bookList", {
       books,
-      error: null 
+      error: null,
     });
   } catch (error) {
     console.error("Error fetching books:", error);
-    res.status(500).render("bookList", { 
+    res.status(500).render("bookList", {
       books: [],
-      error: "Failed to load books. Please try again later."
+      error: "Failed to load books. Please try again later.",
     });
   }
 });
@@ -98,9 +97,9 @@ app.get("/ui/authors", async (req, res) => {
     res.render("authorList", { authors });
   } catch (error) {
     console.error("Error fetching authors:", error);
-    res.status(500).render("authorList", { 
+    res.status(500).render("authorList", {
       authors: [],
-      error: "Failed to load authors"
+      error: "Failed to load authors",
     });
   }
 });
@@ -111,9 +110,9 @@ app.get("/ui/bookshops", async (req, res) => {
     res.render("bookshopList", { bookshops });
   } catch (error) {
     console.error("Error fetching bookshops:", error);
-    res.status(500).render("bookshopList", { 
+    res.status(500).render("bookshopList", {
       bookshops: [],
-      error: "Failed to load bookshops"
+      error: "Failed to load bookshops",
     });
   }
 });
@@ -126,10 +125,12 @@ app.get("/", (req, res) => {
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ message: "Something went wrong!", error: err.message });
+  res
+    .status(500)
+    .json({ message: "Something went wrong!", error: err.message });
 });
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
-}); 
+});
