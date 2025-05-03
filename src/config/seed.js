@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
-const { Author, Book, Bookshop } = require('./models');
+const { Author, Book, Bookshop } = require('../models');
 
 // Sample data
 const authors = [

@@ -5,9 +5,7 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "migrate": "prisma migrate dev --schema=prisma/schema.prisma",
-    "generate": "prisma generate",
-    "seed": "node prisma/seed.js"
+    "seed": "node src/config/seed.js"
   },
   "author": "",
   "license": "ISC",
