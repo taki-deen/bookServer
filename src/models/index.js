@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const authorSchema = require("./auther");
+const authorSchema = require("./author");
 const bookSchema = require("./book");
 const bookshopSchema = require("./bookshop");
 
