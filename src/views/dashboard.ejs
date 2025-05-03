@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bookstore Dashboard</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f2f5;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .card {
+      background-color: #fff;
+      border-radius: 10px;
+      padding: 25px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card h2 {
+      color: #2c3e50;
+      margin-top: 0;
+      margin-bottom: 15px;
+    }
+
+    .card p {
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    a {
+      display: inline-block;
+      padding: 12px 20px;
+      background-color: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      text-align: center;
+      transition: background-color 0.2s ease-in-out;
+    }
+
+    a:hover {
+      background-color: #0056b3;
+    }
+
+    .view-link {
+      background-color: #28a745;
+    }
+
+    .view-link:hover {
+      background-color: #218838;
+    }
+
+    .add-link {
+      background-color: #17a2b8;
+    }
+
+    .add-link:hover {
+      background-color: #138496;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Bookstore Management Dashboard</h1>
+    <div class="dashboard-grid">
+      <!-- Books Section -->
+      <div class="card">
+        <h2>Books</h2>
+        <p>Manage your book collection, add new books, and view existing ones.</p>
+        <div class="actions">
+          <a href="/ui/books" class="view-link">View All Books</a>
+          <a href="/ui/new" class="add-link">Add New Book</a>
+        </div>
+      </div>
+
+      <!-- Authors Section -->
+      <div class="card">
+        <h2>Authors</h2>
+        <p>Manage authors, add new authors, and view the author list.</p>
+        <div class="actions">
+          <a href="/ui/authors" class="view-link">View All Authors</a>
+          <a href="/ui/new-author" class="add-link">Add New Author</a>
+        </div>
+      </div>
+
+      <!-- Bookshops Section -->
+      <div class="card">
+        <h2>Bookshops</h2>
+        <p>Manage bookshops, add new locations, and view existing ones.</p>
+        <div class="actions">
+          <a href="/ui/bookshops" class="view-link">View All Bookshops</a>
+          <a href="/ui/new-bookshop" class="add-link">Add New Bookshop</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html> 

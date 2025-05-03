@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Book List</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f9f9f9;
+        margin: 0;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        color: #333;
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .actions {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 30px;
+      }
+
+      a {
+        display: inline-block;
+        padding: 10px 15px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.2s ease-in-out;
+      }
+
+      a:hover {
+        background-color: #0056b3;
+      }
+
+      .add-link {
+        background-color: #28a745;
+      }
+
+      .add-link:hover {
+        background-color: #218838;
+      }
+
+      .book-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+        padding: 20px;
+      }
+
+      .book-card {
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .book-title {
+        font-size: 20px;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 10px;
+      }
+
+      .book-info {
+        color: #666;
+        margin-bottom: 15px;
+      }
+
+      .book-info span {
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      .book-authors {
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #eee;
+      }
+
+      .book-bookshops {
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #eee;
+      }
+
+      .section-title {
+        font-weight: 500;
+        color: #2c3e50;
+        margin-bottom: 10px;
+      }
+
+      .author-list, .bookshop-list {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .author-item, .bookshop-item {
+        background-color: #f8f9fa;
+        padding: 8px 12px;
+        border-radius: 5px;
+        margin-bottom: 5px;
+        font-size: 14px;
+      }
+
+      .error-message {
+        color: #dc3545;
+        text-align: center;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Books</h1>
+      <div class="actions">
+        <a href="/ui/new" class="add-link">Add New Book</a>
+        <a href="/ui">Back to Dashboard</a>
+      </div>
+
+      <% if (error) { %>
+        <div class="error-message">
+          <%= error %>
+        </div>
+      <% } else { %>
+        <div class="book-grid">
+          <% books.forEach(book => { %>
+            <div class="book-card">
+              <div class="book-title"><%= book.name %></div>
+              <div class="book-info">
+                <span><strong>ISBN:</strong> <%= book.isbn %></span>
+                <span><strong>Aisle:</strong> <%= book.aisle %></span>
+              </div>
+
+              <% if (book.authors && book.authors.length > 0) { %>
+                <div class="book-authors">
+                  <div class="section-title">Authors</div>
+                  <ul class="author-list">
+                    <% book.authors.forEach(author => { %>
+                      <li class="author-item"><%= author.name %></li>
+                    <% }); %>
+                  </ul>
+                </div>
+              <% } %>
+
+              <% if (book.bookshops && book.bookshops.length > 0) { %>
+                <div class="book-bookshops">
+                  <div class="section-title">Available in Bookshops</div>
+                  <ul class="bookshop-list">
+                    <% book.bookshops.forEach(bookshop => { %>
+                      <li class="bookshop-item">
+                        <%= bookshop.name %> - <%= bookshop.address %>
+                      </li>
+                    <% }); %>
+                  </ul>
+                </div>
+              <% } %>
+            </div>
+          <% }); %>
+        </div>
+      <% } %>
+    </div>
+  </body>
+</html> 

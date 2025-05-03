@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Add Book</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      background-color: #fff;
+      padding: 30px 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      max-width: 500px;
+      width: 100%;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    label {
+      font-weight: 500;
+      color: #555;
+    }
+
+    input[type="text"],
+    select {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+      width: 100%;
+    }
+
+    select {
+      background-color: white;
+      cursor: pointer;
+    }
+
+    select[multiple] {
+      height: 120px;
+    }
+
+    button {
+      padding: 12px;
+      background-color: #28a745;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.2s ease-in-out;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+
+    a {
+      display: block;
+      margin-top: 15px;
+      text-align: center;
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .error {
+      color: #dc3545;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Add a New Book</h1>
+    <form action="/books" method="POST">
+      <div class="form-group">
+        <label for="name">Book Name</label>
+        <input type="text" id="name" name="name" required />
+      </div>
+
+      <div class="form-group">
+        <label for="isbn">ISBN</label>
+        <input type="text" id="isbn" name="isbn" required />
+      </div>
+
+      <div class="form-group">
+        <label for="aisle">Aisle</label>
+        <input type="text" id="aisle" name="aisle" required />
+      </div>
+
+      <div class="form-group">
+        <label for="authors">Authors</label>
+        <select id="authors" name="authors" multiple required>
+          <% authors?.forEach(function(author) { %>
+            <option value="<%= author._id %>"><%= author.name %></option>
+          <% }); %>
+        </select>
+        <small>Hold Ctrl/Cmd to select multiple authors</small>
+      </div>
+
+      <div class="form-group">
+        <label for="bookshops">Bookshops</label>
+        <select id="bookshops" name="bookshops" multiple required>
+          <% bookshops.forEach(function(bookshop) { %>
+            <option value="<%= bookshop._id %>"><%= bookshop.name %> - <%= bookshop.address %></option>
+          <% }); %>
+        </select>
+        <small>Hold Ctrl/Cmd to select multiple bookshops</small>
+      </div>
+
+      <button type="submit">Add Book</button>
+    </form>
+    <a href="/ui/books">Back to book list</a>
+  </div>
+</body>
+</html> 

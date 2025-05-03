@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bookshops</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: #333;
+      text-align: center;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    a {
+      display: inline-block;
+      padding: 10px 15px;
+      background-color: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      transition: background-color 0.2s ease-in-out;
+    }
+
+    a:hover {
+      background-color: #0056b3;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    li {
+      background-color: #fff;
+      margin: 10px 0;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .bookshop-name {
+      font-size: 18px;
+      font-weight: 500;
+      color: #2c3e50;
+      margin-bottom: 5px;
+    }
+
+    .bookshop-address {
+      color: #666;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Bookshops</h1>
+    <div class="actions">
+      <a href="/ui/new-bookshop">Add New Bookshop</a>
+      <a href="/ui/books">View Books</a>
+      <a href="/ui/authors">View Authors</a>
+    </div>
+    <ul>
+      <% bookshops.forEach(bookshop => { %>
+        <li>
+          <div class="bookshop-name"><%= bookshop.name %></div>
+          <div class="bookshop-address"><%= bookshop.address %></div>
+        </li>
+      <% }); %>
+    </ul>
+  </div>
+</body>
+</html> 
