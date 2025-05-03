@@ -1,12 +1,14 @@
-const { Bookshop, Book } = require('../models');
+const { Bookshop, Book } = require("../models");
 
 // Get all bookshops
 exports.getAllBookshops = async (req, res) => {
   try {
-    const bookshops = await Bookshop.find().populate('books');
+    const bookshops = await Bookshop.find().populate("books");
     res.json(bookshops);
   } catch (error) {
-    res.status(500).json({ message: "Failed to fetch bookshops", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Failed to fetch bookshops", error: error.message });
   }
 };
 
@@ -14,13 +16,15 @@ exports.getAllBookshops = async (req, res) => {
 exports.getBookshopById = async (req, res) => {
   const { id } = req.params;
   try {
-    const bookshop = await Bookshop.findById(id).populate('books');
+    const bookshop = await Bookshop.findById(id).populate("books");
     if (!bookshop) {
       return res.status(404).json({ message: "Bookshop not found" });
     }
     res.json(bookshop);
   } catch (error) {
-    res.status(500).json({ message: "Failed to fetch bookshop", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Failed to fetch bookshop", error: error.message });
   }
 };
 
@@ -31,13 +35,17 @@ exports.createBookshop = async (req, res) => {
     const bookshop = await Bookshop.create({
       name,
       address,
-      books: bookIds
+      books: bookIds,
     });
 
-    const populatedBookshop = await Bookshop.findById(bookshop._id).populate('books');
+    const populatedBookshop = await Bookshop.findById(bookshop._id).populate(
+      "books"
+    );
     res.status(201).json(populatedBookshop);
   } catch (error) {
-    res.status(400).json({ message: "Failed to create bookshop", error: error.message });
+    res
+      .status(400)
+      .json({ message: "Failed to create bookshop", error: error.message });
   }
 };
 
@@ -51,10 +59,10 @@ exports.updateBookshop = async (req, res) => {
       {
         name,
         address,
-        books: bookIds
+        books: bookIds,
       },
       { new: true }
-    ).populate('books');
+    ).populate("books");
 
     if (!bookshop) {
       return res.status(404).json({ message: "Bookshop not found" });
@@ -62,7 +70,9 @@ exports.updateBookshop = async (req, res) => {
 
     res.json(bookshop);
   } catch (error) {
-    res.status(404).json({ message: "Failed to update bookshop", error: error.message });
+    res
+      .status(404)
+      .json({ message: "Failed to update bookshop", error: error.message });
   }
 };
 
@@ -71,19 +81,18 @@ exports.deleteBookshop = async (req, res) => {
   const { id } = req.params;
   try {
     const bookshop = await Bookshop.findByIdAndDelete(id);
-    
+
     if (!bookshop) {
       return res.status(404).json({ message: "Bookshop not found" });
     }
 
     // Remove bookshop reference from books
-    await Book.updateMany(
-      { bookshops: id },
-      { $pull: { bookshops: id } }
-    );
+    await Book.updateMany({ bookshops: id }, { $pull: { bookshops: id } });
 
     res.status(204).send();
   } catch (error) {
-    res.status(404).json({ message: "Failed to delete bookshop", error: error.message });
+    res
+      .status(404)
+      .json({ message: "Failed to delete bookshop", error: error.message });
   }
-}; 
+};
